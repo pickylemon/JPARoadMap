@@ -1,8 +1,9 @@
 package hellojpa;
 
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 
 public class JpaMain {
 
@@ -17,27 +18,20 @@ public class JpaMain {
         tx.begin();
 
         try {
-//            Member member = new Member();
-//            member.setId(1L);
-//            member.setName("helloB");
-//            em.persist(member); // 1. 회원 저장하기
-
-//            Member findMember = em.find(Member.class, 1L);
-//            System.out.println("findMember = " + findMember);
-//            findMember.setName("helloJ"); //2. 회원 수정하기
-            //jpa를 통해 entity를 가져오면 jpa가 관리를 한다.
-            //스냅샷을 가지고 있다가 변경사항이 있으면 commit시점에 update쿼리를 날림
-
-
-            //JPQL : 1.객체를 대상으로 하는 객체지향쿼리. 2.persistence.xml 설정을 Oracle, MySQL 어떤 방언이든 다 번역함
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(5)
-                    .getResultList();
-
-            for (Member member : result) {
-                System.out.println("member.name = " + member.name);
-            }
+            Member member = new Member();
+            member.setUsername("abc");
+            Member member2 = new Member();
+            member2.setUsername("def");
+            Member member3 = new Member();
+            member3.setUsername("qwe");
+            System.out.println("==============");
+            em.persist(member);
+            em.persist(member2);
+            em.persist(member3);
+            System.out.println("member.getId()="+member.getId());
+            System.out.println("member2.getId()="+member2.getId());
+            System.out.println("member3.getId()="+member3.getId());
+            System.out.println("==============");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();

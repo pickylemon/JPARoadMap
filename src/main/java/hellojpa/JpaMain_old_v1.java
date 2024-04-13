@@ -2,7 +2,7 @@ package hellojpa;
 
 import jakarta.persistence.*;
 
-public class JpaMain_old {
+public class JpaMain_old_v1 {
 
     public static void main(String[] args) {
 
@@ -15,7 +15,7 @@ public class JpaMain_old {
         tx.begin();
 
         try {
-            Member_old member = new Member_old();
+            Member_old_v1 member = new Member_old_v1();
             member.setId(1L);
             member.setName("helloB"); //여기까진 비영속
 
@@ -24,7 +24,7 @@ public class JpaMain_old {
             System.out.println("===AFTER==="); //persist호출시 바로 DB에 쿼리가 날라가는게 아님을 확인하려는 코드
 //            //1. 회원 저장하기
 
-            Member_old findMember = em.find(Member_old.class, 1L);
+            Member_old_v1 findMember = em.find(Member_old_v1.class, 1L);
             System.out.println("findMember = " + findMember);
 //            findMember.setName("helloJ");
               // 2. 회원 수정하기

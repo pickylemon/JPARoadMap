@@ -1,106 +1,89 @@
 package hellojpa;
 
+import hellojpa.Team;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-//@TableGenerator(
-//        name = "MEMBER_SEQ_GENERATOR",
-//        table = "MY_SEQUENCES",
-//        pkColumnValue = "MEMBER_SEQ", allocationSize = 1
-//)
-@SequenceGenerator(
-        name = "MEMBER_SEQ_GENERATOR",
-        sequenceName = "MEMBER_SEQ",
-        initialValue = 1, allocationSize = 50
-)
 public class Member {
-    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @GeneratedValue(strategy = GenerationType.TABLE, generator = "MEMBER_SEQ_GENERATOR")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MEMBER_SEQ_GENERATOR")
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) //생략해도 기본 값 auto
+    @Column(name = "MEMBER_ID")
     private Long id;
-    @Column(name="name")
     private String username;
-    private Integer age;
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType;
-    @Temporal(TemporalType.TIMESTAMP) //DATE, TIME, TIMESTAMP
-    private Date createDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
-    @Lob //varchar를 넘어서는 큰 컨텐츠를 넣을 때
-    private String description;
 
-    @Transient //DB와 연동하지 말라는 애노테이션
-    private int temp;
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+    private String city;
+    private String street;
+    private String zipcode;
 
-    public Member() {
-    }
-    public Member(Long id, String username) {
-        this.id = id;
-        this.username = username;
-    }
+//    @ManyToMany
+//    @JoinTable(name = "MEMBER_PRODUCT") //joinColumn이 아니라 joinTable
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
-    public Integer getAge() {
-        return age;
+    public String getCity() {
+        return city;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public RoleType getRoleType() {
-        return roleType;
+    public String getStreet() {
+        return street;
     }
 
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getZipcode() {
+        return zipcode;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getTemp() {
-        return temp;
-    }
-
-    public void setTemp(int temp) {
-        this.temp = temp;
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", team=" + team +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                '}';
     }
 }

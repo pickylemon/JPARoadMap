@@ -1,16 +1,13 @@
 package hellojpa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
 //@Entity //JPA가 관리하는 대상임을 명시
 //@Table(name = "member")
-public class Member_old {
+public class Member_old_v1 {
     //@Id
     Long id;
     String name;
 
-    public Member_old() {
+    public Member_old_v1() {
     }
 
     public Long getId() {

@@ -5,40 +5,75 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.util.List;
+
 public class JpaMain {
 
     public static void main(String[] args) {
-
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
-        //emf는 application 로딩 시점에 딱 하나만 만든다.
         EntityManager em = emf.createEntityManager();
-        //고객 요청이 올때마다 사용하고 버린다(thread간에 절대 공유x)
         EntityTransaction tx = em.getTransaction();
-        //jpa의 모든 데이터 변경은 트랜잭션 안에서 실행해야 함.
         tx.begin();
 
+//        try{ //v1
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            em.persist(team);
+//
+//            Team team2 = new Team();
+//            team.setName("TeamB");
+//            em.persist(team2);
+//
+//            Member member = new Member();
+//            member.setUsername("member1");
+//            member.setTeam(team);
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+//            //아래 em.find는 원래는 select문이 안 나간다(영속성 컨텍스트의 캐시에서 가져오므로)
+//            //DB에서 날아가는 쿼리를 확인해보려면 flush로 SQL을 다 날리고 영속성 컨텍스트를 clear하는 코드 필요
+//            //그래야 캐싱된게 없어서 다시 DB에서 가져오느라 select쿼리가 나감
+//
+//            Member findMember = em.find(Member.class, member.getId());
+//            System.out.println("findMember.getTeam().getName() = " + findMember.getTeam().getName());
+//
+//            Team findTeam = em.find(Team.class, team2.getId());
+//            findMember.setTeam(findTeam);
+//
+//            tx.commit();
+
         try {
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
             Member member = new Member();
-            member.setUsername("abc");
-            Member member2 = new Member();
-            member2.setUsername("def");
-            Member member3 = new Member();
-            member3.setUsername("qwe");
-            System.out.println("==============");
+            member.setUsername("member1");
+            member.changeTeam(team);
             em.persist(member);
-            em.persist(member2);
-            em.persist(member3);
-            System.out.println("member.getId()="+member.getId());
-            System.out.println("member2.getId()="+member2.getId());
-            System.out.println("member3.getId()="+member3.getId());
-            System.out.println("==============");
+
+            //team.getMembers().add(member); changeTeam() 메서드로 대체
+//            em.flush();
+//            em.clear();
+//            System.out.println("====================");
+
+            Member findMember = em.find(Member.class, member.getId());
+
+//            List<Member> members = findMember.getTeam().getMembers();
+//            System.out.println("===================");
+//            for (Member m : members) {
+//                System.out.println("m = " + m.getUsername());
+//                System.out.println("m = " + m);
+//            }
+            System.out.println("==================");
+
             tx.commit();
-        } catch (Exception e) {
+
+        } catch(Exception e) {
             tx.rollback();
-            e.printStackTrace();
         } finally {
             em.close();
-            //entity매니저는 connection을 가지고 작업하므로 꼭 닫아주어야 한다.
         }
         emf.close();
     }

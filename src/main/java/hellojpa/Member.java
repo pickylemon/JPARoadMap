@@ -14,7 +14,7 @@ public class Member {
     private Long id;
     private String username;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "TEAM_ID")
     private Team team;
     private String city;
@@ -75,15 +75,15 @@ public class Member {
         team.getMembers().add(this);
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", team=" + team +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", zipcode='" + zipcode + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Member{" +
+//                "id=" + id +
+//                ", username='" + username + '\'' +
+//                ", team=" + team +
+//                ", city='" + city + '\'' +
+//                ", street='" + street + '\'' +
+//                ", zipcode='" + zipcode + '\'' +
+//                '}';
+//    }
 }

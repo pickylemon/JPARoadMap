@@ -60,17 +60,20 @@ public class jpqlMain4 {
 
             System.out.println("======== @ManyToOne Fetch 시작============");
 
-//            String sql = "select m from Member m join fetch m.team";
-
-            String sql = "select m from Member m";
+//            //1. fetch조인 아닌 select문(LAZY 로딩의 경우)
+//            String sql = "select m from Member m";
             //전제 : 현재 영속성 컨텍스트에 member와 team 없음(em.flush(), em.clear())
             //LAZY로 설정되어 있을 경우(권장),
             //select문에서는 member테이블만 조회하고,
             //mem.getTeam()을 만났을 때 Team테이블을 조회하는 쿼리 발생
+            //(상황 : 팀1 소속(회원1, 회원2), 팀2 소속(회원3)
                 //회원1- 팀 조회 쿼리 나감
                 //회원2(회원1과 같은 팀) - 영속성 컨텍스트에서 가져옴
                 //회원3 - 팀 조회 쿼리 나감
             //전형적인 N+1문제 (회원이 100만명이었다면..?)
+
+            //2. fetch 조인
+            String sql = "select m from Member m join fetch m.team";
 
             List<Member> resultList = em.createQuery(sql, Member.class).getResultList();
             for (Member mem : resultList) {
@@ -113,7 +116,8 @@ public class jpqlMain4 {
             System.out.println("teams.size() = " + teams.size());
             for (Team team1 : teams) {
                 System.out.println("team1.getMembers().getClass() = " + team1.getMembers().getClass());
-                System.out.println("team.getName() = " + team1.getName() + " & " + "team.getMembers.size=" + team1.getMembers().size());
+                System.out.println("team.getName() = " + team1.getName()
+                        + " & " + "team.getMembers.size=" + team1.getMembers().size());
             }
 
             System.out.println("======== @OneToMany Fetch join Paging 끝============");

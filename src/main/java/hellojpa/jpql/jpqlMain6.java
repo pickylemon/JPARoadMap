@@ -51,7 +51,7 @@ public class jpqlMain6 {
             member3.setType(MemberType.ADMIN);
             member3.changeTeam(team2);
 
-            em.persist(member);
+            em.persist(member); //member.setAge(65)인 상황
             em.persist(member2);
             em.persist(member3);
 

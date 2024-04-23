@@ -12,6 +12,7 @@ public class CustomFunctionContributor implements FunctionContributor {
     @Override
     public void contributeFunctions(FunctionContributions functionContributions) {
         functionContributions.getFunctionRegistry()
-                .register("group_concat", new StandardSQLFunction("group_concat", StandardBasicTypes.STRING));
+                .register("group_concat",
+                        new StandardSQLFunction("group_concat", StandardBasicTypes.STRING));
     }
 }

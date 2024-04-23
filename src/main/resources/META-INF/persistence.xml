@@ -16,7 +16,7 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments"  value="true"/>
             <!--배치 사이즈는 실무에서 보통 글로벌 설정으로 많이 가져간다. 1000이하의 값으로 -->
-            <property name="hibernate.default_batch_fetch_size" value="30"/>
+<!--            <property name="hibernate.default_batch_fetch_size" value="30"/>-->
 
             <!--애플리케이션 실행시마다 초기화-->
             <property name="hibernate.hbm2ddl.auto" value="create" />
@@ -24,3 +24,4 @@
     </persistence-unit>
 
 </persistence>
+

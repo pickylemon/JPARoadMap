@@ -4,6 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -16,27 +19,23 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Child child1 = new Child();
-            Child child2 = new Child();
+            List<Member> members = em.createQuery(
+                    "select m from Member m where m.username like '%k%'"
+                    , Member.class
+            ).getResultList();
+            for (Member member : members) {
+                System.out.println("member = " + member);
+            }
 
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            em.persist(parent);
-//            em.persist(child1);
-//            em.persist(child2);
-
-            // parent중심으로 개발 중이라면,
-            // parent persist할 때 child도 알아서 persist호출 되었으면 좋겠다.
-            // -> Cascade 옵션을 준다.
-
-
-            em.flush();
-            em.clear();
-
-            Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildren().remove(0);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+            Root<Member> m = query.from(Member.class);
+            CriteriaQuery<Member> cq = query.select(m);
+            String username = "dasdfqwer";
+            if(username !=null){ //criteria를 사용하면 jpql을 동적으로 작성 가능
+                cq =  cq.where(cb.like(m.get("username"), "%k%"));
+            }
+            List<Member> resultList2 = em.createQuery(cq).getResultList();
 
             tx.commit();
         } catch(Exception e) {

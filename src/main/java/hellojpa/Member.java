@@ -16,6 +16,7 @@ public class Member {
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "TEAM_ID")
+//    @JoinColumn(insertable = false, updatable = false) // team을 연관관계 주인으로 했을 경우.
     private Team team;
     private String city;
     private String street;
